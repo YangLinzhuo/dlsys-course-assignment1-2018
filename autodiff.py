@@ -200,8 +200,6 @@ class MatMulOp(Op):
         A, B = input_vals[0:2]
         A = A.T if node.matmul_attr_trans_A else A
         B = B.T if node.matmul_attr_trans_B else B
-        print(f"A shape: {A.shape}")
-        print(f"B shape: {B.shape}")
         return A @ B
 
     def gradient(self, node, output_grad):
@@ -337,7 +335,7 @@ def gradients(output_node, node_list):
         for input_node in node.inputs:
             if input_node not in node_to_output_grads_list:
                 node_to_output_grads_list[input_node] = []
-        grads = sum(node_to_output_grads_list[node])
+        grads = sum_node_list(node_to_output_grads_list[node])
         node_to_output_grad[node] = grads
         prev_grads = node.op.gradient(node, grads)
         if prev_grads is not None:
